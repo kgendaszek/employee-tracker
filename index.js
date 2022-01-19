@@ -125,7 +125,7 @@ async function viewEmployeesByDepartment() {
     // CREATE TWO PROPERTIES name AND value FOR THIS OBJECT. THE PROPERTY name SHOULD CONTAIN THE NAME OF THE DEPARTMENT.
     // THE PROPERTY value SHOULD CONTAIN id.
     // TODO: YOUR CODE HERE
-name,
+name: name,
 value: id
   }));
 
@@ -134,8 +134,8 @@ value: id
       type: "list",
       name: "departmentId",
       message: "Which department would you like to see employees for?",
-      choices: departmentChoices
-    }
+      choices: departmentChoices,
+    },
   ]);
 
   const employees = await db.findAllEmployeesByDepartment(departmentId);
@@ -155,7 +155,7 @@ async function updateEmployeeRole() {
     // THIS OBJECT FOR EACH MANAGER WILL RETURN TO MAP() TO CONSTRUCT AN ARRAY TO BE RETURNED AND BE STORED TO managerChoices.
     // TODO: YOUR CODE HERE
     value: id,
-    name: first_name + last_name
+    name: `${first_name} ${last_name}`
 
   }));
 
@@ -291,7 +291,7 @@ async function addEmployee() {
     // THIS OBJECT FOR EACH MANAGER WILL RETURN TO MAP() TO CONSTRUCT AN ARRAY TO BE RETURNED AND BE STORED TO managerChoices.
     // TODO: YOUR CODE HERE
     value: id,
-    name: first_name + last_name
+    name: `${first_name} ${last_name}`
 
   }));
   managerChoices.unshift({ name: "None", value: null });

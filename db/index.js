@@ -13,10 +13,11 @@ class DB {
       // id, first_name, last_name FROM employee TABLE AND department name from department TABLE AND SELECT salary FROM role TABLE
       // YOUR NEED TO USE LEFT JOINS TO JOIN THREE TABLES
       // TODO: YOUR CODE HERE
-      "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.title \
-      FROM employee LEFT JOIN role on role.id = employee.role_id \
-      LEFT JOIN department ON department.id ",
-      employeeId
+      "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.title, role.salary \
+      FROM employee \
+      LEFT JOIN role ON employee.role_id = role.id \
+      LEFT JOIN employee manager ON manager.id = employee.manager_id \
+      LEFT JOIN department ON role.department_id = department.id "
     );
   }
 
@@ -33,13 +34,11 @@ class DB {
     return this.connection.query("INSERT INTO employee SET ?", employee);
   }
 
-
   // Update the given employee's role
   updateEmployeeRole(employeeId, roleId) {
     return this.connection.query(
       // TODO: YOUR CODE HERE
-      "UPDATE employee SET role_id = ? WHERE id = ?"
-[employeeId, roleId]
+      "UPDATE employee SET role_id = ? WHERE id = ?"[(employeeId, roleId)]
     );
   }
 
@@ -59,7 +58,8 @@ class DB {
       // YOU NEED TO USE LEFT JOIN TO JOIN role and department TABLES
       // TODO: YOUR CODE HERE
       "SELECT role.id, role.title, role.salary, department.name as department\
-      FROM role, LEFT JOIN department ON role.department_id = department.id"
+      FROM role\
+       LEFT JOIN department ON role.department_id = department.id"
     );
   }
 
@@ -67,16 +67,17 @@ class DB {
   createRole(role) {
     return this.connection.query(
       // TODO: YOUR CODE HERE
-"INSERT INTO role SET ?", role
-      );
+      "INSERT INTO role SET ?",
+      role
+    );
   }
-
 
   // Find all departments, join with employees and roles and sum up utilized department budget
   findAllDepartments() {
     return this.connection.query(
       "SELECT department.id, department.name, SUM(role.salary) AS utilized_budget \
-      FROM department LEFT JOIN role ON role.department_id = department.id \
+      FROM department \
+       LEFT JOIN role ON role.department_id = department.id \
       LEFT JOIN employee ON employee.role_id = role.id \
       GROUP BY department.id, department.name"
     );
@@ -86,7 +87,8 @@ class DB {
   createDepartment(department) {
     return this.connection.query(
       // TODO: YOUR CODE HERE
-      "INSERT INTO department SET ?", department
+      "INSERT INTO department SET ?",
+      department
     );
   }
 
@@ -96,7 +98,7 @@ class DB {
       "SELECT employee.id, employee.first_name, employee.last_name, role.title \
       FROM employee \
       LEFT JOIN role on employee.role_id = role.id \
-      LEFT JOIN department department on role.department_id = department.id \
+      LEFT JOIN department on role.department_id = department.id \
       WHERE department.id = ?;",
       departmentId
     );
